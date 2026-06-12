@@ -1,7 +1,7 @@
 # Проект «Большое путешествие»
 
 * Студент: [Евгений Овчинников](https://up.htmlacademy.ru/ecmascript-individual/2/user/1315227).
-* Наставник: `Неизвестно`.
+* Наставник: [Александр Сударев](https://htmlacademy.ru/profile/id1152185).
 
 ---
 
