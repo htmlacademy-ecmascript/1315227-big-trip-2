@@ -11,11 +11,9 @@ const createOffer = (offer) => {
         </li>`;
 };
 
-const createPointTemplate = (point, offers, destinations) => {
+const createPointTemplate = (point, selectedOffers, destination) => {
   const { basePrice, isFavorite, type, dateFrom, dateTo } = point;
-  const { name } = destinations;
-
-  // console.log(dateFrom, dateTo)
+  const { name } = destination;
 
   return `<li class="trip-events__item">
     <div class="event">
@@ -35,8 +33,8 @@ const createPointTemplate = (point, offers, destinations) => {
       <p class="event__price">
         €&nbsp;<span class="event__price-value">${basePrice}</span>
       </p>
-      ${offers?.length ? `<h4 class="visually-hidden">Offers:</h4>
-        <ul class="event__selected-offers">${offers.map((offer)=> createOffer(offer)).join('')}</ul>` : ''}
+      ${selectedOffers?.length ? `<h4 class="visually-hidden">Offers:</h4>
+        <ul class="event__selected-offers">${selectedOffers.map((offer)=> createOffer(offer)).join('')}</ul>` : ''}
       <button class="event__favorite-btn ${isFavorite ? 'event__favorite-btn--active' : ''}" type="button">
         <span class="visually-hidden">Add to favorite</span>
         <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
@@ -51,14 +49,14 @@ const createPointTemplate = (point, offers, destinations) => {
 };
 
 export default class PointView {
-  constructor({ point, offers, destinations }) {
+  constructor({ point, selectedOffers, destination }) {
     this.point = point;
-    this.offers = offers;
-    this.destinations = destinations;
+    this.selectedOffers = selectedOffers;
+    this.destination = destination;
   }
 
   getTemplate() {
-    return createPointTemplate(this.point, this.offers, this.destinations);
+    return createPointTemplate(this.point, this.selectedOffers, this.destination);
   }
 
   getElement() {

@@ -40,8 +40,13 @@ const PictureRandomRange = {
   MAX: 5
 };
 
-const OfferRandomRange = {
+const PictureSrcRandomRange = {
   MIN: 1,
+  MAX: 5
+};
+
+const OfferRandomRange = {
+  MIN: 0,
   MAX: 4
 };
 
@@ -64,7 +69,8 @@ const DateFormat = {
   SHORT_DATE: 'MMM D',
   ISO_DATE: 'YYYY-MM-DD',
   ISO_DATETIME_MINUTES: 'YYYY-MM-DDTHH:mm',
-  TIME_ONLY: 'HH:mm'
+  TIME_ONLY: 'HH:mm',
+  INPUT_DATE: 'DD/MM/YY'
 };
 
-export { DESCRIPTIONS, TYPES, CITIES, PRICES, OFFER_TITLES, OFFER_PRICES, DESTINATION_COUNT, PictureRandomRange, OfferRandomRange, GroupOfferRandomRange, DateRange, DurationRange, DateFormat };
+export { DESCRIPTIONS, TYPES, CITIES, PRICES, OFFER_TITLES, OFFER_PRICES, DESTINATION_COUNT, PictureRandomRange, PictureSrcRandomRange, OfferRandomRange, GroupOfferRandomRange, DateRange, DurationRange, DateFormat };

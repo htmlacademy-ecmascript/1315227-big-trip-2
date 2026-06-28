@@ -7,11 +7,9 @@ const createOffer = () => ({
   price: getRandomArrayElement(OFFER_PRICES),
 });
 
-const createGroup = () => ({
-  type: getRandomArrayElement(TYPES),
+const createMockOffers = () => TYPES.map((type) => ({
+  type: type.toLowerCase(),
   offers: Array.from({ length: getRandomInt(OfferRandomRange.MIN, OfferRandomRange.MAX) }, createOffer)
-});
+}));
 
-const mockOffers = TYPES.map(createGroup);
-
-export { mockOffers };
+export { createMockOffers };

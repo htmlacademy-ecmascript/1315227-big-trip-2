@@ -1,11 +1,9 @@
 import { TYPES, PRICES, DESTINATION_COUNT, GroupOfferRandomRange } from '../const.js';
 import { getRandomArrayElement, generateId, getRandomPointDates, getRandomInt } from '../utils.js';
-import { mockDestinations } from '../mock/destination.js';
-import { mockOffers } from '../mock/offer.js';
 
 const createPoint = (destinations, offers) => {
   const type = getRandomArrayElement(TYPES);
-  const offerGroup = offers.find((group) => group.type === type);
+  const offerGroup = offers.find((group) => group.type === type.toLowerCase());
   const { dateFrom, dateTo } = getRandomPointDates();
 
   return {
@@ -20,6 +18,6 @@ const createPoint = (destinations, offers) => {
   };
 };
 
-const mockPoints = Array.from({length: DESTINATION_COUNT}, ()=> createPoint(mockDestinations, mockOffers));
+const createMockPoints = (mockDestinations, mockOffers) => Array.from({length: DESTINATION_COUNT}, ()=> createPoint(mockDestinations, mockOffers));
 
-export { mockPoints };
+export { createMockPoints };
