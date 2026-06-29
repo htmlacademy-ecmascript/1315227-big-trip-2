@@ -80,7 +80,7 @@ export default class TripPresenter {
       destination,
       allOffers,
       isNewPoint: false,
-      cities: this.cities
+      cities: this.#cities
     }), this.#pointListComponent.getElement());
   }
 
