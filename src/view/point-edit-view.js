@@ -1,3 +1,4 @@
+import he from 'he';
 import { TYPES, DateFormat } from '../const.js';
 import { createElement } from '../render.js';
 import { formatPointDate } from '../utils.js';
@@ -6,25 +7,25 @@ const createEventTypeItems = (currentType, id) => TYPES.map((type) => {
   const isChecked = type.toLowerCase() === currentType;
 
   return `<div class="event__type-item">
-      <input id="event-type-${type}-${id}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type}" ${isChecked ? 'checked' : ''}>
-      <label class="event__type-label  event__type-label--${type.toLowerCase()}" for="event-type-${type}-${id}">${type}</label>
+      <input id="event-type-${he.encode(type)}-${he.encode(id)}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${he.encode(type)}" ${isChecked ? 'checked' : ''}>
+      <label class="event__type-label  event__type-label--${he.encode(type.toLowerCase())}" for="event-type-${he.encode(type)}-${he.encode(id)}">${he.encode(type)}</label>
     </div>`;
 }).join('');
 
-const createCitiesDatalist = (cities) => cities?.map((city)=> `<option value="${city}"></option>`).join('');
+const createCitiesDatalist = (cities) => cities?.map((city)=> `<option value="${he.encode(city)}"></option>`).join('');
 
-const createPictures = (pictures) => pictures.map((picture) => `<img class="event__photo" src="${picture?.src}" alt="${picture?.description}">`);
+const createPictures = (pictures) => pictures.map((picture) => `<img class="event__photo" src="${he.encode(picture?.src ?? '')}" alt="${he.encode(picture?.description ?? '')}">`);
 
 const createOffers = (allOffers, selectedOffers) => allOffers.map((offer) => {
   const { id, title, price } = offer;
   const isChecked = selectedOffers.some((selected) => selected.id === id);
 
   return `<div class="event__offer-selector">
-  <input class="event__offer-checkbox  visually-hidden" id="event-offer-${title}-${id}" type="checkbox" name="event-offer-${title}" ${isChecked ? 'checked=""' : ''}>
-  <label class="event__offer-label" for="event-offer-${title}-${id}">
-    <span class="event__offer-title">${title}</span>
+  <input class="event__offer-checkbox  visually-hidden" id="event-offer-${he.encode(title)}-${he.encode(id)}" type="checkbox" name="event-offer-${he.encode(title)}" ${isChecked ? 'checked=""' : ''}>
+  <label class="event__offer-label" for="event-offer-${he.encode(title)}-${he.encode(id)}">
+    <span class="event__offer-title">${he.encode(title)}</span>
     +€&nbsp;
-    <span class="event__offer-price">${price}</span>
+    <span class="event__offer-price">${he.encode(String(price))}</span>
   </label>
 </div>`;
 }).join('');
@@ -37,11 +38,11 @@ const createPointEditTemplate = (point, selectedOffers, destination, allOffers, 
     <form class="event event--edit" action="#" method="post">
       <header class="event__header">
         <div class="event__type-wrapper">
-          <label class="event__type  event__type-btn" for="event-type-toggle-${id}">
+          <label class="event__type  event__type-btn" for="event-type-toggle-${he.encode(id)}">
             <span class="visually-hidden">Choose event type</span>
-            <img class="event__type-icon" width="17" height="17" src="img/icons/${type}.png" alt="Event type icon">
+            <img class="event__type-icon" width="17" height="17" src="img/icons/${he.encode(type)}.png" alt="Event type icon">
           </label>
-          <input class="event__type-toggle  visually-hidden" id="event-type-toggle-${id}" type="checkbox">
+          <input class="event__type-toggle  visually-hidden" id="event-type-toggle-${he.encode(id)}" type="checkbox">
 
           <div class="event__type-list">
             <fieldset class="event__type-group">
@@ -52,29 +53,29 @@ const createPointEditTemplate = (point, selectedOffers, destination, allOffers, 
         </div>
 
         <div class="event__field-group  event__field-group--destination">
-          <label class="event__label  event__type-output" for="event-destination-${id}">
-            ${type}
+          <label class="event__label  event__type-output" for="event-destination-${he.encode(id)}">
+            ${he.encode(type)}
           </label>
-          <input class="event__input  event__input--destination" id="event-destination-${id}" type="text" name="event-destination" value="${name}" list="destination-list-${id}">
-          <datalist id="destination-list-${id}">
+          <input class="event__input  event__input--destination" id="event-destination-${he.encode(id)}" type="text" name="event-destination" value="${he.encode(name)}" list="destination-list-${he.encode(id)}">
+          <datalist id="destination-list-${he.encode(id)}">
             ${createCitiesDatalist(cities)}
           </datalist>
         </div>
 
         <div class="event__field-group  event__field-group--time">
-          <label class="visually-hidden" for="event-start-time-${id}">From</label>
-          <input class="event__input  event__input--time" id="event-start-time-${id}" type="text" name="event-start-time" value="${formatPointDate(dateFrom, DateFormat.INPUT_DATE)} ${formatPointDate(dateFrom, DateFormat.TIME_ONLY)}">
+          <label class="visually-hidden" for="event-start-time-${he.encode(id)}">From</label>
+          <input class="event__input  event__input--time" id="event-start-time-${he.encode(id)}" type="text" name="event-start-time" value="${formatPointDate(dateFrom, DateFormat.INPUT_DATE)} ${formatPointDate(dateFrom, DateFormat.TIME_ONLY)}">
           —
-          <label class="visually-hidden" for="event-end-time-${id}">To</label>
-          <input class="event__input  event__input--time" id="event-end-time-${id}" type="text" name="event-end-time" value="${formatPointDate(dateTo, DateFormat.INPUT_DATE)} ${formatPointDate(dateTo, DateFormat.TIME_ONLY)}">
+          <label class="visually-hidden" for="event-end-time-${he.encode(id)}">To</label>
+          <input class="event__input  event__input--time" id="event-end-time-${he.encode(id)}" type="text" name="event-end-time" value="${formatPointDate(dateTo, DateFormat.INPUT_DATE)} ${formatPointDate(dateTo, DateFormat.TIME_ONLY)}">
         </div>
 
         <div class="event__field-group  event__field-group--price">
-          <label class="event__label" for="event-price-${id}">
+          <label class="event__label" for="event-price-${he.encode(id)}">
             <span class="visually-hidden">Price</span>
             €
           </label>
-          <input class="event__input  event__input--price" id="event-price-${id}" type="text" name="event-price" value="${basePrice ?? ''}">
+          <input class="event__input  event__input--price" id="event-price-${he.encode(id)}" type="text" name="event-price" value="${he.encode(String(basePrice ?? ''))}">
         </div>
 
         <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
@@ -95,7 +96,7 @@ const createPointEditTemplate = (point, selectedOffers, destination, allOffers, 
 
         ${description ? `<section class="event__section  event__section--destination">
           <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-          <p class="event__destination-description">${description}</p>
+          <p class="event__destination-description">${he.encode(description)}</p>
         </section>` : ''}
 
         ${pictures.length ? `<div class="event__photos-container">
