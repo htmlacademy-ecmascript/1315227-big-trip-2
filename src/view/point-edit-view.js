@@ -1,6 +1,6 @@
 import he from 'he';
+import AbstractView from '../framework/view/abstract-view.js';
 import { TYPES, DateFormat } from '../const.js';
-import { createElement } from '../render.js';
 import { formatPointDate } from '../utils.js';
 
 const createEventTypeItems = (currentType, id) => TYPES.map((type) => {
@@ -109,16 +109,16 @@ const createPointEditTemplate = (point, selectedOffers, destination, allOffers, 
   </li>`;
 };
 
-export default class PointEditView {
-  #point;
+export default class PointEditView extends AbstractView {
+  #point = null;
   #offers;
   #destination;
   #allOffers;
   #isNewPoint;
   #cities;
-  #element;
 
   constructor({ point, selectedOffers, destination, allOffers, isNewPoint = false, cities }) {
+    super();
     this.#point = point;
     this.#offers = selectedOffers;
     this.#destination = destination;
@@ -127,19 +127,7 @@ export default class PointEditView {
     this.#cities = cities;
   }
 
-  getTemplate() {
+  get template() {
     return createPointEditTemplate(this.#point, this.#offers, this.#destination, this.#allOffers, this.#isNewPoint, this.#cities);
-  }
-
-  getElement() {
-    if (!this.#element) {
-      this.#element = createElement(this.getTemplate());
-    }
-
-    return this.#element;
-  }
-
-  removeElement() {
-    this.#element = null;
   }
 }

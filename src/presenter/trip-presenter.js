@@ -4,7 +4,7 @@ import PointEditView from '../view/point-edit-view.js';
 import PointListView from '../view/point-list-view.js';
 import PointView from '../view/point-view.js';
 import InfoView from '../view/info-view.js';
-import { render, RenderPosition } from '../render.js';
+import { render, RenderPosition } from '../framework/render.js';
 
 const BLANK_POINT = {
   id: '',
@@ -81,7 +81,7 @@ export default class TripPresenter {
       allOffers,
       isNewPoint: false,
       cities: this.#cities
-    }), this.#pointListComponent.getElement());
+    }), this.#pointListComponent.element);
   }
 
   #renderPoints() {
@@ -92,7 +92,7 @@ export default class TripPresenter {
         point,
         selectedOffers,
         destination
-      }), this.#pointListComponent.getElement());
+      }), this.#pointListComponent.element);
     }
   }
 }
