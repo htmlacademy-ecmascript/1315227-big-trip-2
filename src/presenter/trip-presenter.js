@@ -4,7 +4,7 @@ import PointEditView from '../view/point-edit-view.js';
 import PointListView from '../view/point-list-view.js';
 import PointView from '../view/point-view.js';
 import InfoView from '../view/info-view.js';
-import { render, RenderPosition } from '../framework/render.js';
+import { render, replace, RenderPosition } from '../framework/render.js';
 
 const BLANK_POINT = {
   id: '',
@@ -33,6 +33,9 @@ export default class TripPresenter {
   #offers = [];
   #cities = [];
 
+  #currentPointComponent = null;
+  #currentEditComponent = null;
+
   constructor({filterContainer, eventContainer, infoContainer, pointsModel}) {
     this.#filterContainer = filterContainer;
     this.#eventContainer = eventContainer;
@@ -53,8 +56,9 @@ export default class TripPresenter {
     render(this.#sortComponent, this.#eventContainer);
     render(this.#pointListComponent, this.#eventContainer);
 
-    this.#renderEditForm();
-    this.#renderPoints();
+    for (const point of this.#points) {
+      this.#renderPoint(point);
+    }
   }
 
   #preparePointData(point = BLANK_POINT) {
@@ -68,35 +72,69 @@ export default class TripPresenter {
       { name: '', description: '', pictures: [] };
 
     return {
-      point,
       selectedOffers,
       destination,
       allOffers
     };
   }
 
-  #renderEditForm() {
-    const { point, selectedOffers, destination, allOffers } = this.#preparePointData(this.#points[0]);
+  #closeEditForm() {
+    if (!this.#currentEditComponent) {
+      return;
+    }
 
-    render(new PointEditView({
+    replace(this.#currentPointComponent, this.#currentEditComponent);
+    document.removeEventListener('keydown', this.#escKeyDownHandler);
+
+    this.#currentPointComponent = null;
+    this.#currentEditComponent = null;
+  }
+
+  #openEditForm(pointComponent, pointEditComponent) {
+    this.#closeEditForm();
+
+    this.#currentPointComponent = pointComponent;
+    this.#currentEditComponent = pointEditComponent;
+
+    replace(pointEditComponent, pointComponent);
+    document.addEventListener('keydown', this.#escKeyDownHandler);
+  }
+
+  #escKeyDownHandler = (evt) => {
+    if (evt.key === 'Escape') {
+      evt.preventDefault();
+      this.#closeEditForm();
+    }
+  };
+
+  #renderPoint(point) {
+    const { selectedOffers, destination, allOffers } = this.#preparePointData(point);
+
+    const pointEditComponent = new PointEditView({
       point,
       selectedOffers,
       destination,
       allOffers,
       isNewPoint: false,
-      cities: this.#cities
-    }), this.#pointListComponent.element);
-  }
+      cities: this.#cities,
+      onFormSubmit: () => {
+        this.#closeEditForm();
+      },
+      onCloseClick: () => {
+        this.#closeEditForm();
+      }
+    });
 
-  #renderPoints() {
-    for (const point of this.#points.slice(1)) {
-      const { selectedOffers, destination } = this.#preparePointData(point);
+    const pointComponent = new PointView({
+      point,
+      selectedOffers,
+      destination,
+      onEditClick: () => {
+        this.#openEditForm(pointComponent, pointEditComponent);
+      }
+    });
 
-      render(new PointView({
-        point,
-        selectedOffers,
-        destination
-      }), this.#pointListComponent.element);
-    }
+    render(pointComponent, this.#pointListComponent.element);
+
   }
 }

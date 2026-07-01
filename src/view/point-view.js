@@ -50,18 +50,35 @@ const createPointTemplate = (point, selectedOffers, destination) => {
 };
 
 export default class PointView extends AbstractView {
+  #handleEditClick = null;
   #point = null;
   #selectedOffers = [];
   #destination = {};
 
-  constructor({ point, selectedOffers, destination }) {
+  constructor({ point, selectedOffers, destination, onEditClick }) {
     super();
     this.#point = point;
     this.#selectedOffers = selectedOffers;
     this.#destination = destination;
+    this.#handleEditClick = onEditClick;
+
+    this.#setEventListeners();
   }
 
   get template() {
     return createPointTemplate(this.#point, this.#selectedOffers, this.#destination);
   }
+
+  #setEventListeners() {
+    const rollupButton = this.element.querySelector('.event__rollup-btn');
+
+    if (rollupButton) {
+      rollupButton.addEventListener('click', this.#editClickHandler);
+    }
+  }
+
+  #editClickHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleEditClick();
+  };
 }
