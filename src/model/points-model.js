@@ -4,24 +4,24 @@ import { createMockPoints } from '../mock/point.js';
 
 
 export default class PointsModel {
-  destinations = createMockDestinations();
-  offers = createMockOffers();
-  points = createMockPoints(this.destinations, this.offers);
-  cities = Array.from(new Set(this.destinations.map((city)=> city.name)));
+  #destinations = createMockDestinations();
+  #offers = createMockOffers();
+  #points = createMockPoints(this.#destinations, this.#offers);
+  #cities = Array.from(new Set(this.#destinations.map((city)=> city.name)));
 
-  getPoints() {
-    return this.points;
+  get points() {
+    return this.#points;
   }
 
-  getDestinations() {
-    return this.destinations;
+  get destinations() {
+    return this.#destinations;
   }
 
-  getOffers() {
-    return this.offers;
+  get offers() {
+    return this.#offers;
   }
 
-  getCities() {
-    return this.cities;
+  get cities() {
+    return this.#cities;
   }
 }

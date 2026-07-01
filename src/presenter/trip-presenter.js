@@ -4,7 +4,7 @@ import PointEditView from '../view/point-edit-view.js';
 import PointListView from '../view/point-list-view.js';
 import PointView from '../view/point-view.js';
 import InfoView from '../view/info-view.js';
-import { render, RenderPosition } from '../render.js';
+import { render, replace, RenderPosition } from '../framework/render.js';
 
 const BLANK_POINT = {
   id: '',
@@ -18,73 +18,123 @@ const BLANK_POINT = {
 };
 
 export default class TripPresenter {
-  filterComponent = new FilterView();
-  sortComponent = new SortView();
-  pointListComponent = new PointListView();
-  infoComponent = new InfoView();
+  #filterComponent = new FilterView();
+  #sortComponent = new SortView();
+  #pointListComponent = new PointListView();
+  #infoComponent = new InfoView();
+
+  #filterContainer = null;
+  #eventContainer = null;
+  #infoContainer = null;
+  #pointsModel = null;
+
+  #points = [];
+  #destinations = [];
+  #offers = [];
+  #cities = [];
+
+  #currentPointComponent = null;
+  #currentEditComponent = null;
 
   constructor({filterContainer, eventContainer, infoContainer, pointsModel}) {
-    this.filterContainer = filterContainer;
-    this.eventContainer = eventContainer;
-    this.infoContainer = infoContainer;
-    this.pointsModel = pointsModel;
+    this.#filterContainer = filterContainer;
+    this.#eventContainer = eventContainer;
+    this.#infoContainer = infoContainer;
+    this.#pointsModel = pointsModel;
   }
 
-  preparePointData(point = BLANK_POINT) {
-    const offerGroup = this.offers.find((group) => group.type === point.type.toLowerCase());
+  init() {
+    const { points, destinations, offers, cities } = this.#pointsModel;
+
+    this.#points = [...points];
+    this.#destinations = [...destinations];
+    this.#offers = [...offers];
+    this.#cities = [...cities];
+
+    render(this.#infoComponent, this.#infoContainer, RenderPosition.AFTERBEGIN);
+    render(this.#filterComponent, this.#filterContainer);
+    render(this.#sortComponent, this.#eventContainer);
+    render(this.#pointListComponent, this.#eventContainer);
+
+    for (const point of this.#points) {
+      this.#renderPoint(point);
+    }
+  }
+
+  #preparePointData(point = BLANK_POINT) {
+    const offerGroup = this.#offers.find((group) => group.type === point.type.toLowerCase());
     const selectedOffers = offerGroup?.offers?.filter((offer) =>
       point.offers.includes(offer.id)
     ) ?? [];
     const allOffers = offerGroup?.offers ?? [];
-    const destination = this.destinations.find(
+    const destination = this.#destinations.find(
       (dest) => dest.id === point.destination) ??
       { name: '', description: '', pictures: [] };
 
     return {
-      point,
       selectedOffers,
       destination,
       allOffers
     };
   }
 
-  renderEditForm() {
-    const { point, selectedOffers, destination, allOffers } = this.preparePointData(this.points[0]);
+  #closeEditForm() {
+    if (!this.#currentEditComponent) {
+      return;
+    }
 
-    render(new PointEditView({
+    replace(this.#currentPointComponent, this.#currentEditComponent);
+    document.removeEventListener('keydown', this.#escKeyDownHandler);
+
+    this.#currentPointComponent = null;
+    this.#currentEditComponent = null;
+  }
+
+  #openEditForm(pointComponent, pointEditComponent) {
+    this.#closeEditForm();
+
+    this.#currentPointComponent = pointComponent;
+    this.#currentEditComponent = pointEditComponent;
+
+    replace(pointEditComponent, pointComponent);
+    document.addEventListener('keydown', this.#escKeyDownHandler);
+  }
+
+  #escKeyDownHandler = (evt) => {
+    if (evt.key === 'Escape') {
+      evt.preventDefault();
+      this.#closeEditForm();
+    }
+  };
+
+  #renderPoint(point) {
+    const { selectedOffers, destination, allOffers } = this.#preparePointData(point);
+
+    const pointEditComponent = new PointEditView({
       point,
       selectedOffers,
       destination,
       allOffers,
       isNewPoint: false,
-      cities: this.cities
-    }), this.pointListComponent.getElement());
-  }
+      cities: this.#cities,
+      onFormSubmit: () => {
+        this.#closeEditForm();
+      },
+      onCloseClick: () => {
+        this.#closeEditForm();
+      }
+    });
 
-  renderPoints() {
-    for (const point of this.points.slice(1)) {
-      const { selectedOffers, destination } = this.preparePointData(point);
+    const pointComponent = new PointView({
+      point,
+      selectedOffers,
+      destination,
+      onEditClick: () => {
+        this.#openEditForm(pointComponent, pointEditComponent);
+      }
+    });
 
-      render(new PointView({
-        point,
-        selectedOffers,
-        destination
-      }), this.pointListComponent.getElement());
-    }
-  }
+    render(pointComponent, this.#pointListComponent.element);
 
-  init() {
-    this.points = [...this.pointsModel.getPoints()];
-    this.destinations = [...this.pointsModel.getDestinations()];
-    this.offers = [...this.pointsModel.getOffers()];
-    this.cities = [...this.pointsModel.getCities()];
-
-    render(this.infoComponent, this.infoContainer, RenderPosition.AFTERBEGIN);
-    render(this.filterComponent, this.filterContainer);
-    render(this.sortComponent, this.eventContainer);
-    render(this.pointListComponent, this.eventContainer);
-
-    this.renderEditForm();
-    this.renderPoints();
   }
 }

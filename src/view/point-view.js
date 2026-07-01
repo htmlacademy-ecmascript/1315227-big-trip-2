@@ -1,13 +1,14 @@
-import { createElement } from '../render.js';
+import he from 'he';
+import AbstractView from '../framework/view/abstract-view.js';
 import { formatPointDate, getDurationInPoint } from '../utils.js';
 import { DateFormat } from '../const.js';
 
 const createOffer = (offer) => {
   const { title, price } = offer;
   return `<li class="event__offer">
-          <span class="event__offer-title">${title}</span>
+          <span class="event__offer-title">${he.encode(title)}</span>
           +€&nbsp;
-          <span class="event__offer-price">${price}</span>
+          <span class="event__offer-price">${he.encode(String(price))}</span>
         </li>`;
 };
 
@@ -19,9 +20,9 @@ const createPointTemplate = (point, selectedOffers, destination) => {
     <div class="event">
       <time class="event__date" datetime="${formatPointDate(dateFrom, DateFormat.ISO_DATE)}">${formatPointDate(dateFrom, DateFormat.SHORT_DATE)}</time>
       <div class="event__type">
-        <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
+        <img class="event__type-icon" width="42" height="42" src="img/icons/${he.encode(type)}.png" alt="Event type icon">
       </div>
-      <h3 class="event__title">${type} ${name}</h3>
+      <h3 class="event__title">${he.encode(type)} ${he.encode(name)}</h3>
       <div class="event__schedule">
         <p class="event__time">
           <time class="event__start-time" datetime="${formatPointDate(dateFrom, DateFormat.ISO_DATETIME_MINUTES)}">${formatPointDate(dateFrom, DateFormat.TIME_ONLY)}</time>
@@ -31,7 +32,7 @@ const createPointTemplate = (point, selectedOffers, destination) => {
         <p class="event__duration">${getDurationInPoint(dateFrom, dateTo)}</p>
       </div>
       <p class="event__price">
-        €&nbsp;<span class="event__price-value">${basePrice}</span>
+        €&nbsp;<span class="event__price-value">${he.encode(String(basePrice))}</span>
       </p>
       ${selectedOffers?.length ? `<h4 class="visually-hidden">Offers:</h4>
         <ul class="event__selected-offers">${selectedOffers.map((offer)=> createOffer(offer)).join('')}</ul>` : ''}
@@ -48,26 +49,36 @@ const createPointTemplate = (point, selectedOffers, destination) => {
   </li>`;
 };
 
-export default class PointView {
-  constructor({ point, selectedOffers, destination }) {
-    this.point = point;
-    this.selectedOffers = selectedOffers;
-    this.destination = destination;
+export default class PointView extends AbstractView {
+  #handleEditClick = null;
+  #point = null;
+  #selectedOffers = [];
+  #destination = {};
+
+  constructor({ point, selectedOffers, destination, onEditClick }) {
+    super();
+    this.#point = point;
+    this.#selectedOffers = selectedOffers;
+    this.#destination = destination;
+    this.#handleEditClick = onEditClick;
+
+    this.#setEventListeners();
   }
 
-  getTemplate() {
-    return createPointTemplate(this.point, this.selectedOffers, this.destination);
+  get template() {
+    return createPointTemplate(this.#point, this.#selectedOffers, this.#destination);
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
+  #setEventListeners() {
+    const rollupButton = this.element.querySelector('.event__rollup-btn');
+
+    if (rollupButton) {
+      rollupButton.addEventListener('click', this.#editClickHandler);
     }
-
-    return this.element;
   }
 
-  removeElement() {
-    this.element = null;
-  }
+  #editClickHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleEditClick();
+  };
 }
