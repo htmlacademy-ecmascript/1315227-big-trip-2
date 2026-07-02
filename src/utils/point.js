@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
-import { DateRange, DurationRange } from './const.js';
+import { DateRange, DurationRange } from '../const.js';
 
 dayjs.extend(duration);
 
@@ -23,14 +23,7 @@ const getRandomPointDates = () => {
   };
 };
 
-const getRandomArrayElement = (items) => items[Math.floor(Math.random() * items.length)];
 const generateId = () => crypto.randomUUID();
-
-const getRandomInt = (min, max) => {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min + 1) + min);
-};
 
 const getDurationInPoint = (dateFrom, dateTo) => {
   const timeDuration = dayjs.duration(dayjs(dateTo).diff(dayjs(dateFrom)));
@@ -52,4 +45,4 @@ const getDurationInPoint = (dateFrom, dateTo) => {
   return `${pad(days)}D ${pad(hours)}H ${pad(minutes)}M`;
 };
 
-export { getRandomArrayElement, generateId, getRandomInt, getRandomPointDates, formatPointDate, getDurationInPoint };
+export { generateId, getRandomPointDates, formatPointDate, getDurationInPoint };

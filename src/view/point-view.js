@@ -1,6 +1,6 @@
 import he from 'he';
 import AbstractView from '../framework/view/abstract-view.js';
-import { formatPointDate, getDurationInPoint } from '../utils.js';
+import { formatPointDate, getDurationInPoint } from '../utils/point.js';
 import { DateFormat } from '../const.js';
 
 const createOffer = (offer) => {

@@ -1,5 +1,6 @@
 import { TYPES, PRICES, DESTINATION_COUNT, GroupOfferRandomRange } from '../const.js';
-import { getRandomArrayElement, generateId, getRandomPointDates, getRandomInt } from '../utils.js';
+import { generateId, getRandomPointDates } from '../utils/point.js';
+import { getRandomArrayElement, getRandomInt } from '../utils/common.js';
 
 const createPoint = (destinations, offers) => {
   const type = getRandomArrayElement(TYPES);

@@ -1,5 +1,6 @@
 import { OFFER_TITLES, OFFER_PRICES, TYPES, OfferRandomRange } from '../const.js';
-import { getRandomArrayElement, generateId, getRandomInt } from '../utils.js';
+import { generateId } from '../utils/point.js';
+import { getRandomArrayElement, getRandomInt } from '../utils/common.js';
 
 const createOffer = () => ({
   id: generateId(),

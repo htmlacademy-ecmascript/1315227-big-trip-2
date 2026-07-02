@@ -1,7 +1,7 @@
 import he from 'he';
 import AbstractView from '../framework/view/abstract-view.js';
 import { TYPES, DateFormat } from '../const.js';
-import { formatPointDate } from '../utils.js';
+import { formatPointDate } from '../utils/point.js';
 
 const createEventTypeItems = (currentType, id) => TYPES.map((type) => {
   const isChecked = type.toLowerCase() === currentType;

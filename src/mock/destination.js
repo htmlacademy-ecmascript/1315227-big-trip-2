@@ -1,4 +1,5 @@
-import { getRandomArrayElement, generateId, getRandomInt } from '../utils.js';
+import { generateId } from '../utils/point.js';
+import { getRandomArrayElement, getRandomInt } from '../utils/common.js';
 import { TYPES, DESCRIPTIONS, CITIES, PictureRandomRange, PictureSrcRandomRange } from '../const.js';
 
 const createPicture = () => ({
