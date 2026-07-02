@@ -51,14 +51,7 @@ export default class TripPresenter {
     this.#offers = [...offers];
     this.#cities = [...cities];
 
-    render(this.#infoComponent, this.#infoContainer, RenderPosition.AFTERBEGIN);
-    render(this.#filterComponent, this.#filterContainer);
-    render(this.#sortComponent, this.#eventContainer);
-    render(this.#pointListComponent, this.#eventContainer);
-
-    for (const point of this.#points) {
-      this.#renderPoint(point);
-    }
+    this.#renderTripBoard();
   }
 
   #preparePointData(point = BLANK_POINT) {
@@ -136,5 +129,16 @@ export default class TripPresenter {
 
     render(pointComponent, this.#pointListComponent.element);
 
+  }
+
+  #renderTripBoard() {
+    render(this.#infoComponent, this.#infoContainer, RenderPosition.AFTERBEGIN);
+    render(this.#filterComponent, this.#filterContainer);
+    render(this.#sortComponent, this.#eventContainer);
+    render(this.#pointListComponent, this.#eventContainer);
+
+    for (const point of this.#points) {
+      this.#renderPoint(point);
+    }
   }
 }
