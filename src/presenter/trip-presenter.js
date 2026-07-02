@@ -4,6 +4,7 @@ import PointEditView from '../view/point-edit-view.js';
 import PointListView from '../view/point-list-view.js';
 import PointView from '../view/point-view.js';
 import InfoView from '../view/info-view.js';
+import NoPointView from '../view/no-point-view.js';
 import { render, replace, RenderPosition } from '../framework/render.js';
 
 const BLANK_POINT = {
@@ -22,6 +23,7 @@ export default class TripPresenter {
   #sortComponent = new SortView();
   #pointListComponent = new PointListView();
   #infoComponent = new InfoView();
+  #noPointComponent = new NoPointView();
 
   #filterContainer = null;
   #eventContainer = null;
@@ -132,8 +134,14 @@ export default class TripPresenter {
   }
 
   #renderTripBoard() {
-    render(this.#infoComponent, this.#infoContainer, RenderPosition.AFTERBEGIN);
     render(this.#filterComponent, this.#filterContainer);
+
+    if (!this.#points.length) {
+      render(this.#noPointComponent, this.#eventContainer);
+      return;
+    }
+
+    render(this.#infoComponent, this.#infoContainer, RenderPosition.AFTERBEGIN);
     render(this.#sortComponent, this.#eventContainer);
     render(this.#pointListComponent, this.#eventContainer);
 
