@@ -27,19 +27,28 @@ export default class PointPresenter {
     this.#pointListContainer = pointListContainer;
   }
 
-  init(point, destinations, offers, cities) {
+  init(point, destinations = this.#destinations, offers = this.#offers, cities = this.#cities) {
     this.#point = point;
     this.#destinations = destinations;
     this.#offers = offers;
     this.#cities = cities;
 
-    const { selectedOffers, destination, allOffers } = this.#preparePointData(point);
+    this.#renderPoint();
+  }
+
+  destroy() {
+    remove(this.#pointComponent);
+    remove(this.#pointEditComponent);
+  }
+
+  #renderPoint() {
+    const { selectedOffers, destination, allOffers } = this.#preparePointData(this.#point);
 
     const prevPointComponent = this.#pointComponent;
     const prevPointEditComponent = this.#pointListContainer;
 
     this.#pointEditComponent = new PointEditView({
-      point,
+      point: this.#point,
       selectedOffers,
       destination,
       allOffers,
@@ -54,7 +63,7 @@ export default class PointPresenter {
     });
 
     this.#pointComponent = new PointView({
-      point,
+      point: this.#point,
       selectedOffers,
       destination,
       onEditClick: () => {
@@ -77,11 +86,6 @@ export default class PointPresenter {
 
     remove(prevPointComponent);
     remove(prevPointEditComponent);
-  }
-
-  destroy() {
-    remove(this.#pointComponent);
-    remove(this.#pointEditComponent);
   }
 
   #preparePointData(point = BLANK_POINT) {

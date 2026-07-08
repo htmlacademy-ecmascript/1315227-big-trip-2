@@ -5,6 +5,7 @@ import InfoView from '../view/info-view.js';
 import NoPointView from '../view/no-point-view.js';
 import PointPresenter from './point-presenter.js';
 import { createFilter } from '../mock/filter.js';
+import { updateItem } from '../utils/common.js';
 import { FilterType, SortType } from '../const.js';
 import { render, RenderPosition } from '../framework/render.js';
 
@@ -151,4 +152,9 @@ export default class TripPresenter {
     this.#renderPointList();
     this.#renderPoints();
   }
+
+  #handlePointChange = (updatedPoint) => {
+    this.#points = updateItem(this.#points, updatedPoint);
+    this.#pointPresenters.get(updatedPoint.id).init(updatedPoint);
+  };
 }
