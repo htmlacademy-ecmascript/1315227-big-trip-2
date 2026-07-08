@@ -22,6 +22,10 @@ const BLANK_POINT = {
 
 export default class TripPresenter {
   #pointListComponent = new PointListView();
+  #infoComponent = null;
+  #sortComponent = null;
+  #filterComponent = null;
+  #noPointComponent = null;
 
   #filterContainer = null;
   #eventContainer = null;
@@ -170,27 +174,55 @@ export default class TripPresenter {
     });
 
     render(pointComponent, this.#pointListComponent.element);
-
   }
 
-  #renderTripBoard() {
-    render(new FilterView({filters: this.#filters}), this.#filterContainer);
-
-    if (!this.#points.length) {
-      render(new NoPointView({filterType: FilterType.EVERYTHING}), this.#eventContainer);
-      return;
-    }
-
-    render(new InfoView({
+  #renderInfo() {
+    this.#infoComponent = new InfoView({
       cities: this.#getCitiesForRoute(),
       travelDates: this.#travelDates,
       totalCost: this.#getTotalCost()
-    }), this.#infoContainer, RenderPosition.AFTERBEGIN);
-    render(new SortView({currentSortType: this.#currentSortType}), this.#eventContainer);
-    render(this.#pointListComponent, this.#eventContainer);
+    });
 
-    for (const point of this.#points) {
-      this.#renderPoint(point);
+    render(this.#infoComponent, this.#infoContainer, RenderPosition.AFTERBEGIN);
+  }
+
+  #renderSort() {
+    this.#sortComponent = new SortView({ currentSortType: this.#currentSortType });
+
+    render(this.#sortComponent, this.#eventContainer);
+  }
+
+  #renderList() {
+    render(this.#pointListComponent, this.#eventContainer);
+  }
+
+  #renderFilter() {
+    this.#filterComponent = new FilterView({ filters: this.#filters });
+
+    render(this.#filterComponent, this.#filterContainer);
+  }
+
+  #renderNoPoints() {
+    this.#noPointComponent = new NoPointView({ filterType: FilterType.EVERYTHING });
+
+    render(this.#noPointComponent, this.#eventContainer);
+  }
+
+  #renderPoints() {
+    this.#points.forEach((point)=> this.#renderPoint(point));
+  }
+
+  #renderTripBoard() {
+    this.#renderFilter();
+
+    if (!this.#points.length) {
+      this.#renderNoPoints();
+      return;
     }
+
+    this.#renderInfo();
+    this.#renderSort();
+    this.#renderList();
+    this.#renderPoints();
   }
 }
