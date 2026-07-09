@@ -93,27 +93,32 @@ const SORT_TYPES = [
   {
     type: SortType.DAY,
     label: 'Day',
-    disabled: false
+    disabled: false,
+    dataAttribute: true
   },
   {
     type: SortType.EVENT,
     label: 'Event',
-    disabled: true
+    disabled: true,
+    dataAttribute: false
   },
   {
     type: SortType.TIME,
     label: 'Time',
-    disabled: false
+    disabled: false,
+    dataAttribute: true
   },
   {
     type: SortType.PRICE,
     label: 'Price',
-    disabled: false
+    disabled: false,
+    dataAttribute: true
   },
   {
     type: SortType.OFFER,
     label: 'Offers',
-    disabled: true
+    disabled: true,
+    dataAttribute: false
   }
 ];
 
