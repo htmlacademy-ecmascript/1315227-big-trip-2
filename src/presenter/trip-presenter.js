@@ -6,7 +6,7 @@ import NoPointView from '../view/no-point-view.js';
 import PointPresenter from './point-presenter.js';
 import { createFilter } from '../mock/filter.js';
 import { updateItem } from '../utils/common.js';
-import { sortPointPrice, sortPointTime } from '../utils/point.js';
+import { sortPointPrice, sortPointTime, sortPointDay } from '../utils/point.js';
 import { FilterType, SortType } from '../const.js';
 import { render, RenderPosition } from '../framework/render.js';
 
@@ -43,25 +43,23 @@ export default class TripPresenter {
   init() {
     const { points, destinations, offers, cities } = this.#pointsModel;
 
-    const sortedPoints = [...points].sort((a, b) =>
-      new Date(a.dateFrom) - new Date(b.dateFrom)
-    );
+    const sortedPointsByDay = [...points].sort(sortPointDay);
 
-    const firstPoint = sortedPoints[0];
-    const lastPoint = sortedPoints[sortedPoints.length - 1];
+    const firstPoint = sortedPointsByDay[0];
+    const lastPoint = sortedPointsByDay[sortedPointsByDay.length - 1];
 
     this.#travelDates = {
       dateFrom: firstPoint.dateFrom,
       dateTo: lastPoint.dateTo
     };
 
-    this.#points = [...sortedPoints];
+    this.#points = [...sortedPointsByDay];
     this.#destinations = [...destinations];
     this.#offers = [...offers];
     this.#cities = [...cities];
     this.#filters = createFilter(this.#points);
 
-    this.#sourcedPoints = [...sortedPoints];
+    this.#sourcedPoints = [...sortedPointsByDay];
 
     this.#renderTripBoard();
   }
@@ -112,10 +110,6 @@ export default class TripPresenter {
     render(this.#sortComponent, this.#eventContainer);
   }
 
-  #renderPointList() {
-    render(this.#pointListComponent, this.#eventContainer);
-  }
-
   #renderFilter() {
     this.#filterComponent = new FilterView({ filters: this.#filters });
 
@@ -126,11 +120,6 @@ export default class TripPresenter {
     this.#noPointComponent = new NoPointView({ filterType: FilterType.EVERYTHING });
 
     render(this.#noPointComponent, this.#eventContainer);
-  }
-
-  #clearPoints() {
-    this.#pointPresenters.forEach((presenter) => presenter.destroy());
-    this.#pointPresenters.clear();
   }
 
   #renderPoint(point) {
@@ -144,7 +133,13 @@ export default class TripPresenter {
     this.#pointPresenters.set(point.id, pointPresenter);
   }
 
+  #clearPoints() {
+    this.#pointPresenters.forEach((presenter) => presenter.destroy());
+    this.#pointPresenters.clear();
+  }
+
   #renderPoints() {
+    render(this.#pointListComponent, this.#eventContainer);
     this.#points.forEach((point)=> this.#renderPoint(point));
   }
 
@@ -158,7 +153,6 @@ export default class TripPresenter {
 
     this.#renderInfo();
     this.#renderSort();
-    this.#renderPointList();
     this.#renderPoints();
   }
 
