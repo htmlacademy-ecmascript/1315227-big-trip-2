@@ -89,6 +89,7 @@ const DATEPICKER_CONFIG = {
   dateFormat: 'd/m/y H:i',
   enableTime: true,
   'time_24hr': true,
+  locale: {firstDayOfWeek: 1}
 };
 
 const FilterType = {
