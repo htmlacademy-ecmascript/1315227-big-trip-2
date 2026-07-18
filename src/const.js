@@ -77,12 +77,19 @@ const DateFormat = {
 const BLANK_POINT = {
   id: '',
   basePrice: 0,
-  dateFrom: null,
-  dateTo: null,
+  dateFrom: new Date().toISOString(),
+  dateTo: new Date().toISOString(),
   destination: '',
   isFavorite: false,
   offers: [],
   type: 'flight'
+};
+
+const DATEPICKER_CONFIG = {
+  dateFormat: 'd/m/y H:i',
+  enableTime: true,
+  'time_24hr': true,
+  locale: {firstDayOfWeek: 1}
 };
 
 const FilterType = {
@@ -140,4 +147,4 @@ const NoPointMessage = {
   [FilterType.PAST]: 'Past — \'There are no past events now\''
 };
 
-export { DESCRIPTIONS, TYPES, CITIES, PRICES, OFFER_TITLES, OFFER_PRICES, DESTINATION_COUNT, SORT_TYPES, PictureRandomRange, PictureSrcRandomRange, OfferRandomRange, GroupOfferRandomRange, DateRange, DurationRange, DateFormat, FilterType, SortType, NoPointMessage, BLANK_POINT };
+export { DESCRIPTIONS, TYPES, CITIES, PRICES, OFFER_TITLES, OFFER_PRICES, DESTINATION_COUNT, SORT_TYPES, PictureRandomRange, PictureSrcRandomRange, OfferRandomRange, GroupOfferRandomRange, DateRange, DurationRange, DateFormat, FilterType, SortType, NoPointMessage, BLANK_POINT, DATEPICKER_CONFIG };
