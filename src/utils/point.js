@@ -1,6 +1,5 @@
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
-import { DateRange, DurationRange } from '../const.js';
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 
@@ -13,23 +12,6 @@ const generateId = () => crypto.randomUUID();
 const isPointFuture = (dateFrom) => dayjs(dateFrom).isAfter(dayjs());
 const isPointPast = (dateTo) => dayjs(dateTo).isBefore(dayjs());
 const isPointPresent = (dateFrom, dateTo) => dayjs(dateFrom).isSameOrBefore(dayjs()) && dayjs(dateTo).isSameOrAfter(dayjs());
-
-const getRandomDateInRange = (minDate, maxDate) => {
-  const min = new Date(minDate).getTime();
-  const max = new Date(maxDate).getTime();
-  return new Date(min + Math.random() * (max - min));
-};
-
-const getRandomPointDates = () => {
-  const dateFrom = getRandomDateInRange(DateRange.MIN, DateRange.MAX);
-  const durationMs = (DurationRange.MIN_HOURS + Math.random() * (DurationRange.MAX_HOURS - DurationRange.MIN_HOURS)) * 60 * 60 * 1000;
-  const dateTo = new Date(dateFrom.getTime() + durationMs);
-
-  return {
-    dateFrom: dateFrom.toISOString(),
-    dateTo: dateTo.toISOString()
-  };
-};
 
 const getDurationInPoint = (dateFrom, dateTo) => {
   const timeDuration = dayjs.duration(dayjs(dateTo).diff(dayjs(dateFrom)));
@@ -69,4 +51,18 @@ const getOffersByType = (type, offers) => {
   return offersByType;
 };
 
-export { generateId, getRandomPointDates, formatPointDate, getDurationInPoint, isPointFuture, isPointPast, isPointPresent, sortPointPrice, sortPointTime, sortPointDay, getOffersByType };
+const isDatesEqual = (dateA, dateB) => (dateA === null && dateB === null) || dayjs(dateA).isSame(dateB, 'D');
+
+const isOffersEqual = (arrA, arrB) => {
+  if (!arrA || !arrB) {
+    return false;
+  }
+
+  if (arrA.length !== arrB.length) {
+    return false;
+  }
+
+  return arrA.every((item, index) => item === arrB[index]);
+};
+
+export { generateId, formatPointDate, getDurationInPoint, isPointFuture, isPointPast, isPointPresent, sortPointPrice, sortPointTime, sortPointDay, getOffersByType, isDatesEqual, isOffersEqual };

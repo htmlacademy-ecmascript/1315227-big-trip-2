@@ -37,7 +37,7 @@ export default class InfoView extends AbstractView {
   #travelDates = {};
   #totalCost = 0;
 
-  constructor({ cities, travelDates, totalCost }) {
+  constructor({cities, travelDates, totalCost}) {
     super();
     this.#cities = cities;
     this.#travelDates = travelDates;

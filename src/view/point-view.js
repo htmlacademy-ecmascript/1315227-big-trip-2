@@ -6,9 +6,9 @@ import { DateFormat } from '../const.js';
 const createOffer = (offer) => {
   const { title, price } = offer;
   return `<li class="event__offer">
-          <span class="event__offer-title">${he.encode(title)}</span>
+          <span class="event__offer-title">${title}</span>
           +€&nbsp;
-          <span class="event__offer-price">${he.encode(String(price))}</span>
+          <span class="event__offer-price">${String(price)}</span>
         </li>`;
 };
 
@@ -20,9 +20,9 @@ const createPointTemplate = (point, selectedOffers, destination) => {
     <div class="event">
       <time class="event__date" datetime="${formatPointDate(dateFrom, DateFormat.ISO_DATE)}">${formatPointDate(dateFrom, DateFormat.SHORT_DATE)}</time>
       <div class="event__type">
-        <img class="event__type-icon" width="42" height="42" src="img/icons/${he.encode(type)}.png" alt="Event type icon">
+        <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
       </div>
-      <h3 class="event__title">${he.encode(type)} ${he.encode(name)}</h3>
+      <h3 class="event__title">${type} ${name}</h3>
       <div class="event__schedule">
         <p class="event__time">
           <time class="event__start-time" datetime="${formatPointDate(dateFrom, DateFormat.ISO_DATETIME_MINUTES)}">${formatPointDate(dateFrom, DateFormat.TIME_ONLY)}</time>
@@ -32,7 +32,7 @@ const createPointTemplate = (point, selectedOffers, destination) => {
         <p class="event__duration">${getDurationInPoint(dateFrom, dateTo)}</p>
       </div>
       <p class="event__price">
-        €&nbsp;<span class="event__price-value">${he.encode(String(basePrice))}</span>
+        €&nbsp;<span class="event__price-value">${he.encode(String(basePrice !== 0 ? basePrice : ''))}</span>
       </p>
       ${selectedOffers?.length ? `<h4 class="visually-hidden">Offers:</h4>
         <ul class="event__selected-offers">${selectedOffers.map((offer)=> createOffer(offer)).join('')}</ul>` : ''}
@@ -56,7 +56,7 @@ export default class PointView extends AbstractView {
   #selectedOffers = [];
   #destination = {};
 
-  constructor({ point, selectedOffers, destination, onEditClick, onFavoriteClick }) {
+  constructor({point, selectedOffers, destination, onEditClick, onFavoriteClick}) {
     super();
     this.#point = point;
     this.#selectedOffers = selectedOffers;

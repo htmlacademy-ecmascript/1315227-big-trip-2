@@ -1,5 +1,38 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import { SORT_TYPES } from '../const.js';
+import { SortType } from '../const.js';
+
+const SORT_TYPES = [
+  {
+    type: SortType.DAY,
+    label: 'Day',
+    disabled: false,
+    dataAttribute: true
+  },
+  {
+    type: SortType.EVENT,
+    label: 'Event',
+    disabled: true,
+    dataAttribute: false
+  },
+  {
+    type: SortType.TIME,
+    label: 'Time',
+    disabled: false,
+    dataAttribute: true
+  },
+  {
+    type: SortType.PRICE,
+    label: 'Price',
+    disabled: false,
+    dataAttribute: true
+  },
+  {
+    type: SortType.OFFER,
+    label: 'Offers',
+    disabled: true,
+    dataAttribute: false
+  }
+];
 
 const createSortTemplate = (currentSortType) => `<form class="trip-events__trip-sort  trip-sort" action="#" method="get">
     ${SORT_TYPES.map((item) => `
