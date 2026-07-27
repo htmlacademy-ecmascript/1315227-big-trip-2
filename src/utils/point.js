@@ -14,7 +14,7 @@ const isPointPresent = (dateFrom, dateTo) => dayjs(dateFrom).isSameOrBefore(dayj
 
 const getDurationInPoint = (dateFrom, dateTo) => {
   const timeDuration = dayjs.duration(dayjs(dateTo).diff(dayjs(dateFrom)));
-  const days = timeDuration.days();
+  const days = Math.floor(timeDuration.asDays());
   const hours = timeDuration.hours();
   const minutes = timeDuration.minutes();
   const totalMinutes = timeDuration.asMinutes();
@@ -50,7 +50,7 @@ const getOffersByType = (type, offers) => {
   return offersByType;
 };
 
-const isDatesEqual = (dateA, dateB) => (dateA === null && dateB === null) || dayjs(dateA).isSame(dateB, 'D');
+const isDatesEqual = (dateA, dateB) => (dateA === null && dateB === null) || dayjs(dateA).isSame(dayjs(dateB));
 
 const isOffersEqual = (arrA, arrB) => {
   if (!arrA || !arrB) {

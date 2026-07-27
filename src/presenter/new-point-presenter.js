@@ -9,6 +9,7 @@ export default class NewPointPresenter {
   #destinationsModel = null;
   #handleDataChange = null;
   #handleDestroy = null;
+  #isFormBlock = false;
 
   constructor({pointListContainer, offersModel, destinationsModel, onDataChange, onDestroy}) {
     this.#pointListContainer = pointListContainer;
@@ -23,10 +24,12 @@ export default class NewPointPresenter {
     return this.#destinationsModel.cities;
   }
 
-  init() {
+  init(pointListContainer) {
     if (this.#pointEditComponent !== null) {
       return;
     }
+
+    this.#pointListContainer = pointListContainer;
 
     this.#pointEditComponent = new PointEditView({
       destinations: this.#destinationsModel.destinations,
@@ -56,10 +59,22 @@ export default class NewPointPresenter {
   }
 
   setSaving() {
+    this.#isFormBlock = true;
     this.#pointEditComponent.updateElement({
-      isDisabled: true,
       isSaving: true,
     });
+  }
+
+  setAborting() {
+    const resetFormState = () => {
+      this.#isFormBlock = false;
+      this.#pointEditComponent.updateElement({
+        isSaving: false,
+        isDeleting: false,
+      });
+    };
+
+    this.#pointEditComponent.shake(resetFormState);
   }
 
   #handleFormSubmit = (point) => {
@@ -75,7 +90,7 @@ export default class NewPointPresenter {
   };
 
   #escKeyDownHandler = (evt) => {
-    if (evt.key === 'Escape' || evt.key === 'Esc') {
+    if (evt.key === 'Escape' && !this.#isFormBlock) {
       evt.preventDefault();
       this.destroy();
     }
