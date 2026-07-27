@@ -57,14 +57,20 @@ const handleNewPointButtonClick = ()=> {
 
 addPointButton.addEventListener('click', handleNewPointButtonClick);
 
-const startApp = async () =>{
+const startApp = async () => {
   await Promise.all([
     destinationsModel.init(),
     offersModel.init()
   ]);
 
-  pointsModel.init().finally(() => {
-    addPointButton.disabled = false;
+  pointsModel.init().then(() => {
+    if (
+      !pointsModel.isLoadFailed &&
+      !destinationsModel.isLoadFailed &&
+      !offersModel.isLoadFailed
+    ) {
+      addPointButton.disabled = false;
+    }
   });
 
   tripPresenter.init();
