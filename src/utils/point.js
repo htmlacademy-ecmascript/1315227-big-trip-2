@@ -19,7 +19,7 @@ const getDurationInPoint = (dateFrom, dateTo) => {
   const minutes = timeDuration.minutes();
   const totalMinutes = timeDuration.asMinutes();
 
-  const pad = (num) => String(num).padStart(2, '0');
+  const pad = (value) => String(value).padStart(2, '0');
 
   if (totalMinutes < 60) {
     return `${pad(minutes)}M`;
@@ -52,16 +52,16 @@ const getOffersByType = (type, offers) => {
 
 const isDatesEqual = (dateA, dateB) => (dateA === null && dateB === null) || dayjs(dateA).isSame(dayjs(dateB));
 
-const isOffersEqual = (arrA, arrB) => {
-  if (!arrA || !arrB) {
+const isOffersEqual = (offersA, offersB) => {
+  if (!offersA || !offersB) {
     return false;
   }
 
-  if (arrA.length !== arrB.length) {
+  if (offersA.length !== offersB.length) {
     return false;
   }
 
-  return arrA.every((item, index) => item === arrB[index]);
+  return offersA.every((item, index) => item === offersB[index]);
 };
 
 export { formatPointDate, getDurationInPoint, isPointFuture, isPointPast, isPointPresent, sortPointPrice, sortPointTime, sortPointDay, getOffersByType, isDatesEqual, isOffersEqual };

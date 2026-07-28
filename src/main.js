@@ -50,12 +50,12 @@ const tripPresenter = new TripPresenter({
   onNewPointDestroy: handleNewPointFormClose
 });
 
-const handleNewPointButtonClick = ()=> {
+const newPointButtonClickHandler = ()=> {
   tripPresenter.createPoint();
   addPointButton.disabled = true;
 };
 
-addPointButton.addEventListener('click', handleNewPointButtonClick);
+addPointButton.addEventListener('click', newPointButtonClickHandler);
 
 const startApp = async () => {
   await Promise.all([
