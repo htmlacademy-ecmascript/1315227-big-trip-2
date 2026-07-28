@@ -33,7 +33,6 @@ export default class TripPresenter {
   #destinationsModel = null;
   #offersModel = null;
   #filterModel = null;
-  #filters = [];
   #filterType = FilterType.EVERYTHING;
 
   #travelDates = {};
@@ -119,19 +118,19 @@ export default class TripPresenter {
     }, 0);
   }
 
-  #getCitiesForRoute(points) {
-    const routeCities = points
+  #getCitiesForRoute(routePoints) {
+    const routeCities = routePoints
       .map((point) => {
         const destination = this.destinations.find((dest) => dest.id === point.destination);
         return destination ? destination.name : '';
       })
       .filter(Boolean);
 
-    const filteredCities = routeCities.filter((city, index, array) => {
+    const filteredCities = routeCities.filter((city, index, cities) => {
       if (index === 0) {
         return true;
       }
-      return city !== array[index - 1];
+      return city !== cities[index - 1];
     });
 
     return filteredCities;
